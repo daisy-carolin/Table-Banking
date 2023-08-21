@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 20px 20px 30px;
+    background-color: #33911a;
+    color: #ffffff;
+    width: 100%;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 10px;
+  }
+
+  .nav-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .container {
+    max-width: 500px;
+    max-height: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  h2 {
+    color: #33911a;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .form-group-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-group-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  label {
+    font-weight: bold;
+  }
+
+  .form-control {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  button {
+    padding: 10px 20px;
+    background-color: #33911a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    float: right;
+  }
+
+  button:hover {
+    background-color: #25780c;
+  }
+</style>
+</head>
+<body>
+    <h2>Member Contribution</h2>
+
+  <div class="container">
+    <form action="#" method="post">
+      <div class="form-group-row">
+        <div class="form-group-column">
+          <label for="member_name">Member Name</label>
+          <input type="text" name="member_name" id="member_name" class="form-control" required>
+        </div>
+        <div class="form-group-column">
+          <label for="date">Date</label>
+          <input type="datetime" name="date" id="date" class="form-control" required>
+        
+      </div>
+        <div class="form-group-column">
+          <label for="amount">Amount</label>
+          <input type="number" name="amount" id="amount" class="form-control" required>
+        </div>
+        <div class="form-group-column">
+          <label for="fine_details">Fine Details</label>
+          <input type="text" name="fine_details" id="fine_details" class="form-control" required>
+        </div>
+    </form>
+  </div>
+</body>
+<!-- <button type="submit">Submit Contribution</button> -->
+
+</html>
