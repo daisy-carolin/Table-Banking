@@ -17,6 +17,7 @@ urlpatterns = [
     path('fund_loan/<int:loan_id>/', views.fund_loan, name='fund_loan'),
     path('loan_expenditure/<int:loan_id>/', views.loan_expenditure, name='loan_expenditure'),
 <<<<<<< HEAD
+<<<<<<< HEAD
     path('delete_member/<int:pk>/', views.delete_member, name='delete_member'),
     #New
 path('join_specific_group/<int:id>/', views.join_specific_group, name='join_specific_group'),
@@ -26,6 +27,11 @@ path('join_specific_group/<int:id>/', views.join_specific_group, name='join_spec
     path('borrow/', views.borrow_loan, name='borrow_loan'),
     path('fund/<int:loan_id>/', views.fund_loan, name='fund_loan'),
     path('repay/<int:loan_id>/', views.repay_loan, name='repay_loan'),
+=======
+    path('borrow_loan/', views.borrow_loan, name='borrow_loan'),
+    path('fund_loan/<int:loan_id>/', views.fund_loan, name='fund_loan'),
+    path('repay_loan/<int:loan_id>/', views.repay_loan, name='repay_loan'),
+>>>>>>> added-fund-loan
 
 ]
 >>>>>>> f4e47dd59f670e9a943eadaa68970197dcd80967

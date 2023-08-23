@@ -6,12 +6,16 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f7f7f7;
-            margin: 0;
-            padding: 0;
+            margin-right: 150px;
+            padding-right:100px;
+            padding-left:100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
         .container {
             max-width: 400px;
-            margin: 0 auto;
             padding: 20px;
             background-color: white;
             border: 1px solid #ccc;
@@ -20,7 +24,7 @@
         }
         h1 {
             margin-bottom: 20px;
-            color: #333;
+            color: #33911a;
         }
         p {
             margin-bottom: 30px;
@@ -29,35 +33,40 @@
         form {
             margin-top: 20px;
         }
+        .form-group {
+            margin-bottom: 15px;
+        }
         label {
-            display: block;
-            margin-bottom: 10px;
             font-weight: bold;
             color: #333;
+            display: block;
         }
-        input[type="number"] {
+        input[type="text"],
+        input[type="number"],
+        input[type="datetime"] {
             width: 100%;
             padding: 10px;
-            margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 3px;
         }
         button {
-            background-color: #007bff;
+            background-color: #33911a;
             color: white;
             border: none;
             padding: 10px 15px;
             border-radius: 3px;
             cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #33911a;
         }
         a {
             display: block;
             margin-top: 20px;
-            color: #007bff;
+            color: #33911a;
             text-decoration: none;
+            text-align: center;
         }
         a:hover {
             text-decoration: underline;
@@ -70,13 +79,27 @@
         <p>Repay the loan with the desired amount.</p>
         
         <form method="post">
-            {% csrf_token %}
-            <label for="repayment_amount">Repayment Amount:</label>
-            <input type="number" step="0.01" name="repayment_amount" required>
+            <!-- {% csrf_token %} -->
+            <div class="form-group">
+                <label for="first_name">First Name</label>
+                <input type="text" name="first_name" id="first_name" required>
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name</label>
+                <input type="text" name="last_name" id="last_name" required>
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount:</label>
+                <input type="number" step="0.01" name="amount" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="datetime-local" name="date" id="date" required>
+            </div>
             <button type="submit">Repay Loan</button>
         </form>
         
-        <a href="{% url 'borrow_loan' %}">Back to Borrow Loan</a>
     </div>
 </body>
 </html>

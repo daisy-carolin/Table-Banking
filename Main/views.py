@@ -116,6 +116,15 @@ def member_contribution(request):
 def group_set_up(request):
     return render(request, 'group_set_up.html') 
 
+def borrow_loan(request):
+    return render(request, 'borrow_loan.html')
+
+def repay_loan(request):
+    return render(request, 'repay_loan.html')
+
+def loan_repayment(request):
+    return render(request, 'loan_repayment.html')
+
 
 <<<<<<< HEAD
 def member_list(request):
@@ -211,78 +220,65 @@ def loan_expenditure(request):
 =======
 
 
-# @login_required
-def join_group(request, group_id):
-    group = Group.objects.get(id=group_id)
-    user = request.user
-
-    if request.method == 'POST':
-        # Handle depositing money to user's account
-        deposit_amount = float(request.POST.get('deposit_amount', 0))
-        if deposit_amount > 0 and user.balance >= deposit_amount:
-            user.balance -= deposit_amount
-            user.save()
-            return redirect('group_detail', group_id=group_id)
-
-    return render(request, 'join_group.html', {'group': group})
 
 
-# @login_required
-def borrow_loan(request):
-    user = request.user
 
-    if request.method == 'POST':
-        # Handle loan borrowing
-        loan_amount = float(request.POST.get('loan_amount', 0))
-        if user.balance >= loan_amount:
-            loan = Loan.objects.create(
-                user=user,
-                amount=loan_amount,
-                remaining_amount=loan_amount,
-                is_repaid=False,
-                is_approved=False
-            )
-            user.balance -= loan_amount
-            user.save()
-            return redirect('borrow_loan')
+# # @login_required
+# def borrow_loan(request):
+#     user = request.user
 
-    return render(request, 'borrow_loan.html')
+#     if request.method == 'POST':
+#         # Handle loan borrowing
+#         loan_amount = float(request.POST.get('loan_amount', 0))
+#         if user.balance >= loan_amount:
+#             loan = Loan.objects.create(
+#                 user=user,
+#                 amount=loan_amount,
+#                 remaining_amount=loan_amount,
+#                 is_repaid=False,
+#                 is_approved=False
+#             )
+#             user.balance -= loan_amount
+#             user.save()
+#             return redirect('borrow_loan')
 
-# @login_required
-def fund_loan(request, loan_id):
-    loan = Loan.objects.get(id=loan_id)
-    user = request.user
+#     return render(request, 'borrow_loan.html')
 
-    if request.method == 'POST':
-        # Handle loan funding
-        funding_amount = float(request.POST.get('funding_amount', 0))
-        if user.balance >= funding_amount:
-            LoanFunding.objects.create(user=user, loan=loan, amount_funded=funding_amount)
-            user.balance -= funding_amount
-            user.save()
-            return redirect('fund_loan', loan_id=loan_id)
+# # @login_required
+# def fund_loan(request, loan_id):
+#     loan = Loan.objects.get(id=loan_id)
+#     user = request.user
 
-    return render(request, 'fund_loan.html', {'loan': loan})
+#     if request.method == 'POST':
+#         # Handle loan funding
+#         funding_amount = float(request.POST.get('funding_amount', 0))
+#         if user.balance >= funding_amount:
+#             LoanFunding.objects.create(user=user, loan=loan, amount_funded=funding_amount)
+#             user.balance -= funding_amount
+#             user.save()
+#             return redirect('fund_loan', loan_id=loan_id)
 
-# @login_required
-def repay_loan(request, loan_id):
-    loan = Loan.objects.get(id=loan_id)
-    user = request.user
+#     return render(request, 'fund_loan.html', {'loan': loan})
 
-    if request.method == 'POST':
-        # Handle loan repayment
-        repayment_amount = float(request.POST.get('repayment_amount', 0))
-        if user.balance >= repayment_amount:
-            LoanRepayment.objects.create(loan=loan, amount=repayment_amount)
-            loan.remaining_amount -= repayment_amount
-            if loan.remaining_amount <= 0:
-                loan.is_repaid = True
-            loan.save()
-            user.balance -= repayment_amount
-            user.save()
-            return redirect('repay_loan', loan_id=loan_id)
+# # @login_required
+# def repay_loan(request, loan_id):
+#     loan = Loan.objects.get(id=loan_id)
+#     user = request.user
 
-    return render(request, 'repay_loan.html', {'loan': loan})
+#     if request.method == 'POST':
+#         # Handle loan repayment
+#         repayment_amount = float(request.POST.get('repayment_amount', 0))
+#         if user.balance >= repayment_amount:
+#             LoanRepayment.objects.create(loan=loan, amount=repayment_amount)
+#             loan.remaining_amount -= repayment_amount
+#             if loan.remaining_amount <= 0:
+#                 loan.is_repaid = True
+#             loan.save()
+#             user.balance -= repayment_amount
+#             user.save()
+#             return redirect('repay_loan', loan_id=loan_id)
+
+#     return render(request, 'repay_loan.html', {'loan': loan})
 
 
 
