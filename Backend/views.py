@@ -1,17 +1,17 @@
 from django.shortcuts import render
-from django.shortcuts import render
-from Main.models import *
-
-# Create your views here.
-
+from .models import *  # Import all models from the same package
 from datetime import datetime
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework import permissions
 from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
+from .serializers import *  # Import all serializers from the same package
 
-from Main.models import Group,CreateGroup,Contribution,LoanExpenditure,LoanFunding,Loan,Interest,Fee
+
+from Main.models import Group,UserRegistration,CreateGroup,Contribution, Loan, LoanFunding, Interest, Fee, LoanExpenditure
 from .serializers import (
+UserRegistration,
 Group,
 CreateGroup,
 Contribution,
@@ -20,8 +20,7 @@ LoanFunding,
 Loan,
 Interest,
 Fee
-
-   )
+)
 
 from drf_yasg.utils import swagger_auto_schema
 
@@ -30,27 +29,24 @@ from .serializers import *
 
 from django.contrib.auth.hashers import make_password
 
+class UserRegistrationView(APIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = UserRegistrationSerializer
 
-# Create your views here.
+    @swagger_auto_schema(responses={200: UserRegistrationSerializer(many=True)})
+    def get(self, format=None, *args, **kwargs):
+        user_registration= UserRegistration.objects.all()
+        serializer = UserRegistrationSerializer( user_registration, many=True)
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
 
-# class UserRegistrationView(APIView):
-#     permission_classes = [permissions.AllowAny]
-#     serializer_class = UserRegistrationSerializer
-
-#     @swagger_auto_schema(responses={200: UserRegistrationSerializer(many=True)})
-#     def get(self, format=None, *args, **kwargs):
-#         user_registration= UserRegistration.objects.all()
-#         serializer = UserRegistrationSerializer( user_registration, many=True)
-#         return Response(status=status.HTTP_200_OK, data=serializer.data)
-
-#     @swagger_auto_schema(request_body=UserRegistrationSerializer)
-#     def post(self, request, format=None, *args, **kwargs):
-#         serializers = UserRegistrationSerializer(data=request.data)
-#         if serializers.is_valid():
-#             serializers.save()
-#             return Response(data=serializers.data, status=status.HTTP_201_CREATED)
-#         else:
-#             return Response(data=serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    @swagger_auto_schema(request_body=UserRegistrationSerializer)
+    def post(self, request, format=None, *args, **kwargs):
+        serializers = UserRegistrationSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(data=serializers.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(data=serializers.errors, status=status.HTTP_400_BAD_REQUEST)
         
 
 
@@ -72,7 +68,6 @@ from django.contrib.auth.hashers import make_password
 #             return Response(data=serializers.data, status=status.HTTP_201_CREATED)
 #         else:
 #             return Response(data=serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-        
 
 
 class GroupView(APIView):

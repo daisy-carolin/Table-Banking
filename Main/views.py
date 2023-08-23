@@ -5,9 +5,9 @@ from .models import *
 from .forms import *
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth import login, logout, authenticate
-from datetime import datetime
+from datetime import datetime, timezone
 from django.contrib.auth.decorators import login_required
-from .models import User, Group, Contribution, Loan, LoanFunding, Interest, Fee, LoanExpenditure
+from .models import Contribution, Loan, LoanFunding, Interest, Fee, LoanExpenditure,LoanFunding, LoanRepayment
 
 def register(request):
     if request.method == "POST":
@@ -60,6 +60,7 @@ def group_set_up(request):
     return render(request, 'group_set_up.html') 
 
 
+# @login_required
 def create_group(request):
     records = CreateGroup.objects.all()
     
@@ -91,7 +92,7 @@ def contribute(request):
     context = {"form": form, "records": records, "contribute": "active"}
     return render(request, "templates/contribute.html", context)
 
-
+# @login_required
 def request_loan(request):
     records = Loan.objects.all()
     form = LoanForm(initial={"id": request.id})
@@ -105,7 +106,7 @@ def request_loan(request):
     context = {"form": form, "records": records, "request_loan": "active"}
     return render(request, "templates/request_loan.html", context)
 
-
+# @login_required
 def fund_loan(request):
     records = LoanFunding.objects.all()
     form = LoanFundingForm(initial={"id": request.id})
@@ -120,6 +121,7 @@ def fund_loan(request):
     return render(request, "templates/fund_loan.html", context)
 
 
+# @login_required
 def loan_expenditure(request):
     records = LoanExpenditure.objects.all()
     form = LoanExpenditureForm(initial={"id": request.id})
@@ -132,6 +134,80 @@ def loan_expenditure(request):
             print(form.errors)
     context = {"form": form, "records": records, "loan_expenditure": "active"}
     return render(request, "templates/loan_expenditure.html", context)
+
+
+# @login_required
+def join_group(request, group_id):
+    group = Group.objects.get(id=group_id)
+    user = request.user
+
+    if request.method == 'POST':
+        # Handle depositing money to user's account
+        deposit_amount = float(request.POST.get('deposit_amount', 0))
+        if deposit_amount > 0 and user.balance >= deposit_amount:
+            user.balance -= deposit_amount
+            user.save()
+            return redirect('group_detail', group_id=group_id)
+
+    return render(request, 'join_group.html', {'group': group})
+
+
+# @login_required
+def borrow_loan(request):
+    user = request.user
+
+    if request.method == 'POST':
+        # Handle loan borrowing
+        loan_amount = float(request.POST.get('loan_amount', 0))
+        if user.balance >= loan_amount:
+            loan = Loan.objects.create(
+                user=user,
+                amount=loan_amount,
+                remaining_amount=loan_amount,
+                is_repaid=False,
+                is_approved=False
+            )
+            user.balance -= loan_amount
+            user.save()
+            return redirect('borrow_loan')
+
+    return render(request, 'borrow_loan.html')
+
+# @login_required
+def fund_loan(request, loan_id):
+    loan = Loan.objects.get(id=loan_id)
+    user = request.user
+
+    if request.method == 'POST':
+        # Handle loan funding
+        funding_amount = float(request.POST.get('funding_amount', 0))
+        if user.balance >= funding_amount:
+            LoanFunding.objects.create(user=user, loan=loan, amount_funded=funding_amount)
+            user.balance -= funding_amount
+            user.save()
+            return redirect('fund_loan', loan_id=loan_id)
+
+    return render(request, 'fund_loan.html', {'loan': loan})
+
+# @login_required
+def repay_loan(request, loan_id):
+    loan = Loan.objects.get(id=loan_id)
+    user = request.user
+
+    if request.method == 'POST':
+        # Handle loan repayment
+        repayment_amount = float(request.POST.get('repayment_amount', 0))
+        if user.balance >= repayment_amount:
+            LoanRepayment.objects.create(loan=loan, amount=repayment_amount)
+            loan.remaining_amount -= repayment_amount
+            if loan.remaining_amount <= 0:
+                loan.is_repaid = True
+            loan.save()
+            user.balance -= repayment_amount
+            user.save()
+            return redirect('repay_loan', loan_id=loan_id)
+
+    return render(request, 'repay_loan.html', {'loan': loan})
 
 
 

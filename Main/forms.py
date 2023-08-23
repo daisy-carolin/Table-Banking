@@ -5,8 +5,14 @@ from django.contrib.auth.models import User
 
 class UserRegistrationForm(forms.ModelForm):
     class Meta:
-        model = UserRegistation
+        model = UserRegistration
         fields = "__all__"
+
+
+# class UserLoginForm(forms.ModelForm):
+#     class Meta:
+#         model = UserLogin
+#         fields = "__all__"
 
 
 class GroupForm(forms.ModelForm):
@@ -35,6 +41,12 @@ class LoanForm(forms.ModelForm):
 class LoanFundingForm(forms.ModelForm):
     class Meta:
         model = LoanFunding
+        fields = "__all__"
+
+
+class LoanRepaymentForm(forms.ModelForm):
+    class Meta:
+        model = LoanRepayment
         fields = "__all__"
 
 

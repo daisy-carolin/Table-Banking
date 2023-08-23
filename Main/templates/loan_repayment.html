@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Repay Loan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        p {
+            margin-bottom: 30px;
+            color: #666;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        a {
+            display: block;
+            margin-top: 20px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Repay Loan</h1>
+        <p>Repay the loan with the desired amount.</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <label for="repayment_amount">Repayment Amount:</label>
+            <input type="number" step="0.01" name="repayment_amount" required>
+            <button type="submit">Repay Loan</button>
+        </form>
+        
+        <a href="{% url 'borrow_loan' %}">Back to Borrow Loan</a>
+    </div>
+</body>
+</html>

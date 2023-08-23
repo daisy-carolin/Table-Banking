@@ -1,7 +1,18 @@
 from rest_framework import serializers, fields
-from Main.models import Group,CreateGroup,Contribution,LoanExpenditure,LoanFunding,Loan,Interest,Fee
+from Main.models import UserRegistration,Group,CreateGroup,Contribution,LoanExpenditure,LoanFunding,Loan,Interest,Fee
 from .models import *
 
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserRegistration
+        fields = ("first_name","last_name","phone_number", "password", )
+
+
+# class UserLoginSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = UserLogin
+#         fields = ("phone_number", "password", )
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,54 +1,70 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.contrib.auth.models import BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
-class CustomUserManager(BaseUserManager):
-    def create_user(self, phone_number, password=None, **extra_fields):
+class UserManager(BaseUserManager):
+    def create_user(self, email, phone_number, password=None):
+        if not email:
+            raise ValueError("Email is required.")
         if not phone_number:
-            raise ValueError("The Phone Number field must be set")
-        
-        user = self.model(phone_number=phone_number, **extra_fields)
+            raise ValueError("Phone number is required.")
+
+        user = self.model(
+            email=self.normalize_email(email),
+            phone_number=phone_number,
+        )
         user.set_password(password)
         user.save(using=self._db)
         return user
-    
-    def create_superuser(self, phone_number, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
-        
-        return self.create_user(phone_number, password, **extra_fields)
-    
-class User(models.Model):
-    phone_number = models.CharField(max_length=15)
-    password = models.CharField(max_length=255)
 
-    def __str__(self):
-        return self.password
 
-class Group(models.Model):
-    admin = models.ForeignKey(User, on_delete=models.CASCADE, related_name='admin_of')
-    chair = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chair_of')
-    signatories = models.ManyToManyField(User, related_name='signatories')
-
-    def __str__(self):
-        return self.admin
-    
-class UserRegistation(AbstractBaseUser, PermissionsMixin):
+class CustomUser(AbstractBaseUser):
+    email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    objects = CustomUserManager()
+    
+    objects = UserManager()
+    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['phone_number']
+    
+    def __str__(self):
+        return self.email
+    
+    def create_superuser(self, email, phone_number, password=None):
+        user = self.create_user(email=email, phone_number=phone_number, password=password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+        return user
+
+class UserRegistration(AbstractBaseUser):
+    first_name = models.CharField(max_length=250, null=True, blank=True)
+    last_name = models.CharField(max_length=250, null=True, blank=True)
+    phone_number = models.CharField(max_length=20, unique=True)
+    password = models.CharField(max_length=128, null=True, blank=True)
+
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
     USERNAME_FIELD = 'phone_number'
+    REQUIRED_FIELDS = ['password']
 
-    groups = models.ManyToManyField(Group, blank=True, related_name='user_registrations')
-    user_permissions = models.ManyToManyField('auth.Permission', blank=True, related_name='user_registrations', related_query_name='user_registration_permission')
+    objects = UserManager()
 
+    def __str__(self):
+        return self.phone_number
 
+class Group(models.Model):
+    admin = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='admin_of')
+    chair = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='chair_of')
+    signatories = models.ManyToManyField(CustomUser, related_name='signatories')
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.admin)
+    
 class CreateGroup(models.Model):
     GROUP_TYPES = [
         ('savings', 'Savings Group'),
@@ -64,49 +80,58 @@ class CreateGroup(models.Model):
         ('USD', 'US Dollar'),
         ('EUR', 'Euro'),
         ('KES', 'Kenyan Shilling'),
-        
     ]
 
-    group_name = models.CharField(max_length=100)
+    group_name = models.CharField(max_length=100, null=True, blank=True)
     number_of_members = models.PositiveIntegerField()
-    group_type = models.CharField(max_length=20, choices=GROUP_TYPES)
-    group_role = models.CharField(max_length=20, choices=GROUP_ROLES)
-    country_of_operation = models.CharField(max_length=50)
-    group_currency = models.CharField(max_length=3, choices=CURRENCIES)
+    group_type = models.CharField(max_length=20, choices=GROUP_TYPES, null=True, blank=True)
+    group_role = models.CharField(max_length=20, choices=GROUP_ROLES, null=True, blank=True)
+    country_of_operation = models.CharField(max_length=50, null=True, blank=True)
+    group_currency = models.CharField(max_length=3, choices=CURRENCIES, null=True, blank=True)
 
     def __str__(self):
         return self.group_name
 
 class Contribution(models.Model):
-    member_name=models.CharField(max_length=50)
+    member_name = models.CharField(max_length=50, null=True, blank=True)
     date = models.DateField()
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    fine_details=models.CharField(max_length=250)
+    fine_details = models.CharField(max_length=250, null=True, blank=True)
     
-
     def __str__(self):
-        return self.amount
-
+        return str(self.amount)
 
 class Loan(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     interest_rate = models.DecimalField(max_digits=5, decimal_places=2)
     repayment_months = models.PositiveIntegerField()
+    remaining_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # Set a default value
+    is_repaid = models.BooleanField(default=False)
     is_approved = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.amount
+        return str(self.amount)
 
+    
 
 class LoanFunding(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     loan = models.ForeignKey(Loan, on_delete=models.CASCADE)
     amount_funded = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateField()
 
     def __str__(self):
-        return self.amount_funded
+        return str(self.amount_funded)
+    
+    
+class LoanRepayment(models.Model):
+    loan = models.ForeignKey(Loan, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateField()
+
+    def __str__(self):
+        return str(self.amount)
 
 
 class Interest(models.Model):
@@ -115,8 +140,7 @@ class Interest(models.Model):
     date = models.DateField()
 
     def __str__(self):
-        return self.date
-
+        return str(self.date)
 
 class Fee(models.Model):
     short_name = models.CharField(max_length=50)
@@ -127,16 +151,13 @@ class Fee(models.Model):
     def __str__(self):
         return self.description
 
-
 class LoanExpenditure(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    project_name = models.CharField(max_length=100)
+    project_name = models.CharField(max_length=100, null=True, blank=True)
     description = models.TextField()
     budgeted_amount = models.DecimalField(max_digits=10, decimal_places=2)
     amount_spent = models.DecimalField(max_digits=10, decimal_places=2)
     last_spent_date = models.DateField()
 
     def __str__(self):
-        return self.amount_spent
-
-
+        return str(self.amount_spent)
