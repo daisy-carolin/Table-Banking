@@ -81,7 +81,7 @@ class Contribution(models.Model):
     member_name=models.CharField(max_length=50)
     date = models.DateField()
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    fine_details=models.CharField(max_length=250)
+    # fine_details=models.CharField(max_length=250)
     
 
     def __str__(self):
@@ -139,4 +139,28 @@ class LoanExpenditure(models.Model):
     def __str__(self):
         return self.amount_spent
 
+class Member(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    contact = models.PositiveIntegerField()
+    email = models.EmailField()
 
+    def __str__(self):
+        return self.name
+    
+    
+from django.contrib.auth import get_user_model
+from .models import Group
+
+
+User = get_user_model()
+
+class UserGroupMembership(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    group = models.ForeignKey(CreateGroup, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user} - {self.group}"
+
+
+ 

@@ -1,6 +1,9 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" href="{% static 'favicon/favicon.png' %}" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static 'favicon/favicon.png' %}" type="image/x-icon">
 </head>
 <style>
      .nav-container {
@@ -59,6 +62,10 @@
                 <div style="margin-bottom: 15px;">
                     <label for="phone_number" style="font-weight: bold;">Phone Number</label>
                     <input type="tel" name="phone_number" id="phone_number" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="email" placeholder = "Enter your Email Address" style="font-weight: bold;">Email </label>
+                    <input type="text" name="email" id="email" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;" required>
                 </div>
                 <div style="margin-bottom: 15px;">
                     <label for="role" style="font-weight: bold;">Role</label>

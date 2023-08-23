@@ -1,5 +1,8 @@
 {% block head_block %}
+{% load static %}
 {% if user.is_authenticated %}
+<link rel="icon" href="{% static 'favicon/favicon.png' %}" type="image/x-icon">
+<link rel="shortcut icon" href="{% static 'favicon/favicon.png' %}" type="image/x-icon">
 <ul class="navbar-nav mr-2">
 <li class="nav-item dropdown">
 <a class="nav-link dropdown-toggle" href='#' id="navbarDropdown" role="button" data-toggle="dropdown"> Welcome {{request.user}}</a>
@@ -19,4 +22,3 @@ Login
 
 {% endif %}
 {% endblock %}
-

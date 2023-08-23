@@ -79,7 +79,7 @@ button {
     color: #ffffff;
     text-decoration: none;
     font-weight: bold;
-}  
+}
 
 </style>
 <div class="nav-container">
@@ -94,44 +94,9 @@ button {
 </div>
 <body>
 
-<div class="text-center container">
-        <h1 id="title text-center">Table Banking</h1>
-        <p>Empowering women through financial inclusion.</p>
-        <p>Choose an option to continue</p>
-        <a href="{% url 'group_set_up' %}" class="btn btn-primary" id="create-group-button">Create a Group</a>
-        <button id="join-group">Join a Group</button>
-
-        <hr>
-        <h2>Join any of these Group below</h2>
-        <ul>
-            {% for group in groups %}
-                <li>
-                    <strong>{{ group.group_name }}</strong>
-                    {% comment %} <p>{{ group.group_type }}</p>  {% endcomment %}
-                    <a href="{% url 'join_specific_group' group.id %}">Join Group</a>
-                </li>
-            {% endfor %} 
-        </ul>
-
-
-        {% if user.is_authenticated %}
-            <a href="{% url 'logout' %}" class="btn btn-danger" id="logout-button">Logout</a>
-        {% endif %}
-        
-
-    <h1>Join Group Result</h1>
-    {% if group_joined %}
-        <p>You have successfully joined the group "{{ group.group_name }}"!</p>
-        <!-- You can add more information about the group if needed -->
-    {% else %}
-        <p>There was an error joining the group "{{ group.group_name }}". Please try again later.</p>
-        <!-- You can provide more details about the error if needed -->
-    {% endif %}
-
-    <a href="{% url 'dashboard' %}">Go back to dashboard</a>
-
-        <p>&copy; 2023 Bharathbrands. All rights reserved.</p>
-    </div>
+<div class="text-center container">        
+    <p>&copy; 2023 Bharathbrands. All rights reserved.</p>
+</div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

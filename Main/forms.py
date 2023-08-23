@@ -55,4 +55,13 @@ class LoanExpenditureForm(forms.ModelForm):
         model = LoanExpenditure
         fields = "__all__"
 
+class MembershipForm(forms.ModelForm):
+    class Meta:
+        model = Member
+        fields = "__all__"
 
+
+class DeleteMemberForm(forms.ModelForm):
+    class Meta:
+        model = Member
+        fields = "__all__"
