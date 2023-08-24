@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Loan Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            max-width: 400px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .button {
+            background-color: #33911a;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .button:hover {
+            background-color: #33911a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Loan Management</h1>
+        <p>Empowering women through financial inclusion.</p>
+        <p>Choose an option to continue:</p>
+        <div class="button-group">
+            <a class="button" href="{% url 'member_contribution' %}">Deposit Money</a>
+            <a class="button" href="{% url 'borrow_loan' %}">Borrow Loan</a>
+            <a class="button" href="{% url 'fund_loan' loan_id=loan_id %}">Fund Loan</a>
+            <a class="button" href="{% url 'repay_loan' loan_id=loan_id %}">Repay Loan</a>
+        </div>
+    </div>
+</body>
+
+</html>

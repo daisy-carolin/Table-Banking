@@ -93,20 +93,24 @@ class CreateGroup(models.Model):
         return self.group_name
 
 class Contribution(models.Model):
-    member_name = models.CharField(max_length=50, null=True, blank=True)
-    date = models.DateField()
+    first_name = models.CharField(max_length=250, null=True, blank=True)
+    last_name = models.CharField(max_length=250, null=True, blank=True) 
+      
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     fine_details = models.CharField(max_length=250, null=True, blank=True)
+<<<<<<< HEAD
         
+=======
+    
+>>>>>>> 8724db0fc7af6ff050f4c4e8393a732073b665e5
     def __str__(self):
         return str(self.amount)
 
 class Loan(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=250, null=True, blank=True)
+    last_name = models.CharField(max_length=250, null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    interest_rate = models.DecimalField(max_digits=5, decimal_places=2)
     repayment_months = models.PositiveIntegerField()
-    remaining_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # Set a default value
     is_repaid = models.BooleanField(default=False)
     is_approved = models.BooleanField(default=False)
 
@@ -116,8 +120,8 @@ class Loan(models.Model):
     
 
 class LoanFunding(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    loan = models.ForeignKey(Loan, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=250, null=True, blank=True)
+    last_name = models.CharField(max_length=250, null=True, blank=True)
     amount_funded = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateField()
 
@@ -126,7 +130,8 @@ class LoanFunding(models.Model):
     
     
 class LoanRepayment(models.Model):
-    loan = models.ForeignKey(Loan, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=250, null=True, blank=True)
+    last_name = models.CharField(max_length=250, null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateField()
 
@@ -160,6 +165,7 @@ class LoanExpenditure(models.Model):
     last_spent_date = models.DateField()
 
     def __str__(self):
+<<<<<<< HEAD
         return self.amount_spent
 
 class Member(models.Model):
@@ -188,3 +194,6 @@ class UserGroupMembership(models.Model):
 
  
         
+=======
+        return str(self.amount_spent)
+>>>>>>> 8724db0fc7af6ff050f4c4e8393a732073b665e5

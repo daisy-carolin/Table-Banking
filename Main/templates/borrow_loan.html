@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Borrow Loan</title>
+    <title>Loan Repayment</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,45 +23,43 @@
         }
         h1 {
             margin-bottom: 20px;
-            color: #333;
-        }
-        p {
-            margin-bottom: 30px;
-            color: #666;
+            color: #33911a;
         }
         form {
             margin-top: 20px;
         }
+        .form-group {
+            margin-bottom: 15px;
+        }
         label {
-            display: block;
-            margin-bottom: 10px;
             font-weight: bold;
             color: #333;
+            display: block;
         }
         input[type="number"] {
             width: 100%;
             padding: 10px;
-            margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 3px;
         }
         button {
-            background-color: #007bff;
+            background-color: #33911a;
             color: white;
             border: none;
             padding: 10px 15px;
             border-radius: 3px;
             cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #33911a;
         }
         a {
-            margin-top: 20px;
             display: block;
-            text-align: center;
-            color: #007bff;
+            margin-top: 20px;
+            color: #33911a;
             text-decoration: none;
+            text-align: center;
         }
         a:hover {
             text-decoration: underline;
@@ -71,18 +69,31 @@
 <body>
     <div class="container">
         <h1>Borrow Loan</h1>
-        <p>Borrow a loan by specifying the loan amount.</p>
-        
         <form method="post">
-            <label for="loan_amount">Loan Amount:</label>
-            <input type="number" step="0.01" name="loan_amount" required>
-            <button type="submit">Borrow Loan</button>
+            <!-- {% csrf_token %} -->
+            <div class="form-group">
+                <label for="first_name">First Name</label>
+                <input type="text" name="first_name" id="first_name" required>
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name</label>
+                <input type="text" name="last_name" id="last_name" required>
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount:</label>
+                <input type="number" step="0.01" name="amount" required>
+            </div>
+            <div class="form-group">
+                <label for="repayment_months">Repayment Months</label>
+                <input type="text" name="repayment_months" id="repayment_months" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="interest">Interest</label>
+                <input type="text" name="interest" id="interest" required>
+            </div>
+            <button type="submit">Submit Repayment</button>
         </form>
-        
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="{% url 'fund_loan' %}" style="margin-right: 20px;">Fund Loan</a>
-            <a href="{% url 'repay_loan' %}">Repay Loan</a>
-        </div>
     </div>
 </body>
 </html>

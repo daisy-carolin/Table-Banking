@@ -1,5 +1,5 @@
 from multiprocessing import context
-from django.contrib import messages
+from pyexpat.errors import messages
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import *
 from .forms import *
@@ -43,17 +43,17 @@ def login_user(request):
 
     return render(request, "registration/login.html")
 
+
+
 def logout(request):
     logout(request)
     return redirect("registration/login")
 
 def join_group(request):
-    groups = CreateGroup.objects.all()
-    context= {"groups":groups}    
-    return render(request, 'join_group.html', context)
-  
-    
+    return render(request, 'join_group.html')   
+
 def add_member(request):
+<<<<<<< HEAD
     if request.method == "POST":
         form = MembershipForm(request.POST)
         if form.is_valid():
@@ -118,6 +118,9 @@ def join_specific_group(request, id):
         # Redirect the user to the login page or show an appropriate message
         return redirect('home')
 
+=======
+    return render(request, 'add_member.html') 
+>>>>>>> 8724db0fc7af6ff050f4c4e8393a732073b665e5
 
 def member_contribution(request):
     return render(request, 'member_contribution.html') 
@@ -125,25 +128,36 @@ def member_contribution(request):
 def group_set_up(request):
     return render(request, 'group_set_up.html') 
 
+def borrow_loan(request):
+    return render(request, 'borrow_loan.html')
 
+<<<<<<< HEAD
+=======
+def repay_loan(request):
+    return render(request, 'repay_loan.html')
+
+def loan_repayment(request):
+    return render(request, 'loan_repayment.html')
+
+
+>>>>>>> 8724db0fc7af6ff050f4c4e8393a732073b665e5
 # @login_required
 def create_group(request):
+    records = CreateGroup.objects.all()
+    
     if request.method == "POST":
         form = CreateGroupForm(request.POST)
-        
         if form.is_valid():
-            group = form.save()
-            print("Group Created for:", group)
-            messages.success(request, "Group created successfully!")
-            return redirect('dashboard')
+            form.save()
+            return redirect("create_group")  
         else:
             print(form.errors)
-            messages.error(request, "There were errors in the form.")
     else:
-        form = CreateGroupForm()
+        form = CreateGroupForm()  
+        
+    context = {"form": form, "records": records, "create_group": "active"}
+    return render(request, "create_group.html", context)  
 
-    context = {"form": form, "create_group": "active"}
-    return render(request, "create_group.html", context)
 
 
 def contribute(request):
@@ -201,6 +215,7 @@ def loan_expenditure(request):
             print(form.errors)
     context = {"form": form, "records": records, "loan_expenditure": "active"}
     return render(request, "templates/loan_expenditure.html", context)
+<<<<<<< HEAD
 
 
 # @login_required
@@ -281,3 +296,71 @@ def group_members(request, group_id):
     members = group.usergroupmembership_set.all()  # Get all members of the group
     context = {"group": group, "members": members}
     return render(request, 'group_members.html', context)
+=======
+
+
+
+
+
+# # @login_required
+# def borrow_loan(request):
+#     user = request.user
+
+#     if request.method == 'POST':
+#         # Handle loan borrowing
+#         loan_amount = float(request.POST.get('loan_amount', 0))
+#         if user.balance >= loan_amount:
+#             loan = Loan.objects.create(
+#                 user=user,
+#                 amount=loan_amount,
+#                 remaining_amount=loan_amount,
+#                 is_repaid=False,
+#                 is_approved=False
+#             )
+#             user.balance -= loan_amount
+#             user.save()
+#             return redirect('borrow_loan')
+
+#     return render(request, 'borrow_loan.html')
+
+# # @login_required
+# def fund_loan(request, loan_id):
+#     loan = Loan.objects.get(id=loan_id)
+#     user = request.user
+
+#     if request.method == 'POST':
+#         # Handle loan funding
+#         funding_amount = float(request.POST.get('funding_amount', 0))
+#         if user.balance >= funding_amount:
+#             LoanFunding.objects.create(user=user, loan=loan, amount_funded=funding_amount)
+#             user.balance -= funding_amount
+#             user.save()
+#             return redirect('fund_loan', loan_id=loan_id)
+
+#     return render(request, 'fund_loan.html', {'loan': loan})
+
+# # @login_required
+# def repay_loan(request, loan_id):
+#     loan = Loan.objects.get(id=loan_id)
+#     user = request.user
+
+#     if request.method == 'POST':
+#         # Handle loan repayment
+#         repayment_amount = float(request.POST.get('repayment_amount', 0))
+#         if user.balance >= repayment_amount:
+#             LoanRepayment.objects.create(loan=loan, amount=repayment_amount)
+#             loan.remaining_amount -= repayment_amount
+#             if loan.remaining_amount <= 0:
+#                 loan.is_repaid = True
+#             loan.save()
+#             user.balance -= repayment_amount
+#             user.save()
+#             return redirect('repay_loan', loan_id=loan_id)
+
+#     return render(request, 'repay_loan.html', {'loan': loan})
+
+
+
+
+
+>>>>>>> 8724db0fc7af6ff050f4c4e8393a732073b665e5
