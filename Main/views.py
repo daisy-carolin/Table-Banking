@@ -8,6 +8,8 @@ from django.contrib.auth import login, logout, authenticate
 from datetime import datetime, timezone
 from django.contrib.auth.decorators import login_required
 from .models import Contribution, Loan, LoanFunding, Interest, Fee, LoanExpenditure,LoanFunding, LoanRepayment
+from django.shortcuts import get_object_or_404
+
 
 def register(request):
     if request.method == "POST":
@@ -56,7 +58,7 @@ def add_member(request):
         form = MembershipForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('dashboard')  # Redirect to the appropriate URL after successful form submission
+            return redirect('group_members', group_id=request.user.usergroupmembership.group.id)
     else:
         form = MembershipForm()
     
@@ -74,31 +76,38 @@ def delete_member(request, pk):  # Updated parameter name
         pass
     return render(request, 'delete_member.html', {'member': member})   # Render a delete confirmation page
     
-from django.shortcuts import get_object_or_404
-from .models import UserGroupMembership, Group
 
 # def join_specific_group(request, id):
 #     if request.user.is_authenticated:
 #         group = get_object_or_404(CreateGroup, id=id)  # Get the group by ID
-#         membership = UserGroupMembership(user=request.user, group=group)
-#         membership.save()
-#         return render(request, 'joined_group.html', {'group': group})
-#         print("Hello Shama")
+
+#         try:
+#             membership = UserGroupMembership(user=request.user, group=group)
+#             membership.save()
+#             group_joined = True
+#         except Exception as e:
+#             group_joined = False
+#             # Print or log the error message for debugging
+#             print(f"Error joining group: {e}")
+
+#         return render(request, 'joined.html', {'group': group, 'group_joined': group_joined})
 #     else:
 #         # Redirect the user to the login page or show an appropriate message
 #         return redirect('home')
-#         pass
-from django.shortcuts import get_object_or_404, render, redirect
-from .models import CreateGroup, UserGroupMembership
-
 def join_specific_group(request, id):
     if request.user.is_authenticated:
         group = get_object_or_404(CreateGroup, id=id)  # Get the group by ID
 
         try:
-            membership = UserGroupMembership(user=request.user, group=group)
-            membership.save()
-            group_joined = True
+            # Check if the user is already a member of the group
+            membership = UserGroupMembership.objects.filter(user=request.user, group=group).first()
+
+            if membership:
+                group_joined = True  # User is already a member
+            else:
+                membership = UserGroupMembership(user=request.user, group=group)
+                membership.save()
+                group_joined = True  # User joined the group
         except Exception as e:
             group_joined = False
             # Print or log the error message for debugging
@@ -117,21 +126,7 @@ def group_set_up(request):
     return render(request, 'group_set_up.html') 
 
 
-<<<<<<< HEAD
-def member_list(request):
-    members = Member.objects.all()  # Get all members from the database
-    return render(request, 'member_list.html', {'members': members})
-
-
-def group_members(request, group_id):
-    group = Group.objects.get(id=group_id)  # Get the group by ID
-    members = Member.objects.filter(usergroupmembership__group=group)
-    return render(request, 'group_members.html', {'group': group, 'members': members})
-
-
-=======
 # @login_required
->>>>>>> f4e47dd59f670e9a943eadaa68970197dcd80967
 def create_group(request):
     if request.method == "POST":
         form = CreateGroupForm(request.POST)
@@ -206,25 +201,22 @@ def loan_expenditure(request):
             print(form.errors)
     context = {"form": form, "records": records, "loan_expenditure": "active"}
     return render(request, "templates/loan_expenditure.html", context)
-<<<<<<< HEAD
-    
-=======
 
 
 # @login_required
-def join_group(request, group_id):
-    group = Group.objects.get(id=group_id)
-    user = request.user
+# def join_group(request, group_id):
+#     group = Group.objects.get(id=group_id)
+#     user = request.user
 
-    if request.method == 'POST':
-        # Handle depositing money to user's account
-        deposit_amount = float(request.POST.get('deposit_amount', 0))
-        if deposit_amount > 0 and user.balance >= deposit_amount:
-            user.balance -= deposit_amount
-            user.save()
-            return redirect('group_detail', group_id=group_id)
+#     if request.method == 'POST':
+#         # Handle depositing money to user's account
+#         deposit_amount = float(request.POST.get('deposit_amount', 0))
+#         if deposit_amount > 0 and user.balance >= deposit_amount:
+#             user.balance -= deposit_amount
+#             user.save()
+#             return redirect('group_detail', group_id=group_id)
 
-    return render(request, 'join_group.html', {'group': group})
+#     return render(request, 'join_group.html', {'group': group})
 
 
 # @login_required
@@ -284,8 +276,8 @@ def repay_loan(request, loan_id):
 
     return render(request, 'repay_loan.html', {'loan': loan})
 
-
-
-
-
->>>>>>> f4e47dd59f670e9a943eadaa68970197dcd80967
+def group_members(request, group_id):
+    group = CreateGroup.objects.get(id=group_id)
+    members = group.usergroupmembership_set.all()  # Get all members of the group
+    context = {"group": group, "members": members}
+    return render(request, 'group_members.html', context)

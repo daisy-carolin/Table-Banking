@@ -8,97 +8,59 @@
     <link rel="icon" href="{% static 'favicon/favicon.png' %}" type="image/x-icon">
     <link rel="shortcut icon" href="{% static 'favicon/favicon.png' %}" type="image/x-icon">
     <title>Table Banking</title>
+    <style>
+        /* Add your custom styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            text-align: center;
+            margin: 100px auto; 
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 80px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #33911a;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 10px;
+            border-radius: 5px;
+        }
+
+        /* Add more custom styles as needed */
+    </style>
 </head>
-<style>
-/* styles.css */
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-}
-
-.container {
-    text-align: center;
-    margin: 100px auto; 
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-}
-
-h1 {
-    color: #333;
-    margin-top: 80px; /* Adjust the top margin to reduce the distance */
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #33911a;
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin: 10px;
-    border-radius: 5px;
-}
-
-#create-group {
-    margin-right: 10px; 
-}
-
-#join-group {
-    margin-left: 10px; 
-}
-
-#logout-button {
-    background-color: #d9534f;
-    margin-top: 50px;
-    color: black;
-}
-
-.nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 30px 20px 20px 30px;
-    background-color: #33911a;
-    color: #ffffff;
-    width: 100%;
-}
-
-.nav-links {
-    display: flex;
-    gap: 10px;
-}
-
-#nav-links {
-    float: right;
-    margin-left: 60rem;
-}
-
-.nav-link {
-    color: #ffffff;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-</style>
-<div class="nav-container">
-    <div class="nav-links" id="nav-links">
-        <a href="{% url 'dashboard' %}" class="nav-link">Home</a>
-        <a href="{% url 'login' %}" class="nav-link">Login</a>
-        <a href="{% url 'register' %}" class="nav-link">Register</a>
-        {% if user.is_authenticated %}
-            <a href="{% url 'logout' %}" class="nav-link">Logout</a>
-        {% endif %}
-    </div>
-</div>
 <body>
+    <div class="container">
+        <h1>Join Group</h1>
+        <p>Welcome to the "{{ group.group_name }}" group!</p>
+        <p>Joining this group allows you to contribute, manage finances, and more.</p>
+        
+        <form action="{% url 'add_member' %}" method="POST">
+            {% csrf_token %}
+            <!-- Add form fields for user details -->
+            <!-- Example: <input type="text" name="username" placeholder="Username" required> -->
+            <!-- Repeat for other fields -->
 
-<div class="text-center container">        
-    <p>&copy; 2023 Bharathbrands. All rights reserved.</p>
-</div>
+            <button type="submit" class="btn">Join Group</button>
+        </form>
 
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+    <footer class="text-center py-4">
+        &copy; 2023 Table Banking. All rights reserved.
+    </footer>
 </body>
 </html>

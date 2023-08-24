@@ -96,12 +96,8 @@ class Contribution(models.Model):
     member_name = models.CharField(max_length=50, null=True, blank=True)
     date = models.DateField()
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-<<<<<<< HEAD
-    # fine_details=models.CharField(max_length=250)
-=======
     fine_details = models.CharField(max_length=250, null=True, blank=True)
->>>>>>> f4e47dd59f670e9a943eadaa68970197dcd80967
-    
+        
     def __str__(self):
         return str(self.amount)
 
@@ -164,7 +160,6 @@ class LoanExpenditure(models.Model):
     last_spent_date = models.DateField()
 
     def __str__(self):
-<<<<<<< HEAD
         return self.amount_spent
 
 class Member(models.Model):
@@ -192,6 +187,4 @@ class UserGroupMembership(models.Model):
 
 
  
-=======
-        return str(self.amount_spent)
->>>>>>> f4e47dd59f670e9a943eadaa68970197dcd80967
+        
